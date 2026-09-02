@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6566912969458772960}
   - component: {fileID: 3768694681457085040}
   m_Layer: 6
-  m_Name: Collectable
+  m_Name: CollectableTier1
   m_TagString: Collectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,7 +206,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8adf57ef27355e42a4140db9c985f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  collectedColor: {r: 0.19433957, g: 1, b: 0.20925263, a: 1}
-  failedColor: {r: 0.82641506, g: 0, b: 0, a: 1}
-  delayForDestruction: 1
-  graceTime: 3
+  data: {fileID: 11400000, guid: 9046faa07c46dfe4da6922127f45940f, type: 2}
+  queuedForDestruction: 0
