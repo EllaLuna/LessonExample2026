@@ -3,15 +3,10 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    [SerializeField] Color collectedColor;
-    [SerializeField] Color failedColor;
-
-    [SerializeField] float delayForDestruction = 1f;
-    [SerializeField] float graceTime = 3f;
+    [SerializeField] CollectableSO data;
     SpriteRenderer sprite;
     public bool queuedForDestruction = false;
     bool startedGraceTime = false;
-    int score = 1;
 
     void Start()
     {
@@ -26,9 +21,9 @@ public class Collectable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             queuedForDestruction = true;
-            ScoreEvents.UpdateScore?.Invoke(score);
-            sprite.color = collectedColor;
-            Destroy(gameObject, delayForDestruction);
+            ScoreEvents.UpdateScore?.Invoke(data.Score);
+            sprite.color = data.CollectedColor;
+            Destroy(gameObject, data.DelayForDestruction);
             return;
         }
         if (other.gameObject.CompareTag("Ground") && !startedGraceTime)
@@ -40,11 +35,11 @@ public class Collectable : MonoBehaviour
     IEnumerator GraceTime()
     {
         startedGraceTime = true;
-        yield return new WaitForSeconds(graceTime);
+        yield return new WaitForSeconds(data.GraceTime);
         if (queuedForDestruction)
             yield break;
         queuedForDestruction = true;
-        sprite.color = failedColor;
-        Destroy(gameObject, delayForDestruction);
+        sprite.color = data.FailedColor;
+        Destroy(gameObject, data.DelayForDestruction);
     }
 }
