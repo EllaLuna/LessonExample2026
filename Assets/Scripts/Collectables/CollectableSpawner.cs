@@ -7,16 +7,17 @@ public class CollectableSpawner : MonoBehaviour
 {
     [SerializeField] Transform markerLeft;
     [SerializeField] Transform markerRight;
-    [SerializeField] GameObject prefab;
-
+    [SerializeField] List<PrefabChances> prefabChances;
     float timeToStartSpawn = 1f;
     [SerializeField] float spawnDelay = 0.5f;
     int spawnAmount = 10;
 
+    const int maxChance = 100;
     void Start()
     {
+        prefabChances = prefabChances.OrderBy(x => x.chance).ToList();
         //StartCoroutine(SpawnOverTime());
-        InvokeRepeating(nameof(InfiniteSpawn), timeToStartSpawn, spawnDelay);
+        InvokeRepeating(nameof(SpawnRandomPrefab), timeToStartSpawn, spawnDelay);
     }
 
     IEnumerator SpawnOverTime()
@@ -25,15 +26,30 @@ public class CollectableSpawner : MonoBehaviour
 
         for (int i = 0; i < spawnAmount; i++)
         {
-            Instantiate(prefab, GenerateRandomPosition(), Quaternion.identity);
+
+            SpawnRandomPrefab();
             yield return new WaitForSeconds(spawnDelay);
         }
     }
 
-    private void InfiniteSpawn()
+    private void SpawnRandomPrefab()
     {
-       var obj = Instantiate(prefab, GenerateRandomPosition(), Quaternion.identity);
-        obj.GetComponent<SpriteRenderer>().color = Random.ColorHSV();
+        Instantiate(ChooseRandomPrefab(), GenerateRandomPosition(), Quaternion.identity);
+    }
+
+    private GameObject ChooseRandomPrefab()
+    {
+        int random = Random.Range(0, maxChance);
+        GameObject chosenPrefab = prefabChances.Last().prefab;
+        foreach (var prefab in prefabChances)
+        {
+            if (random <= prefab.chance)
+            {
+                chosenPrefab = prefab.prefab;
+                break;
+            }
+        }
+        return chosenPrefab;
     }
 
     private Vector3 GenerateRandomPosition()
