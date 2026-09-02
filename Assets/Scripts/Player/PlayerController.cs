@@ -5,15 +5,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody2D rb2d;
     [SerializeField] Animator animator;
     Vector2 direction;
-    [SerializeField] float speed = 50;
+    [SerializeField] float speed = 10;
     [SerializeField] float jumpForce = 8f;
     bool isGrounded = false;
-    
-    void Start()
+
+    private void Reset()
     {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+    }
 
+    void Start()
+    {
         InputEvents.Move += OnMove;
         InputEvents.Jump += OnJump;
     }
