@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -6,16 +7,17 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         pauseMenu = GetComponentInChildren<PauseMenu>(includeInactive: true);
-        InputEvents.Pause += OnPause;
+        GameStatesEvents.StateUpdated += OnStateUpdated;
     }
 
-    private void OnPause()
+    private void OnStateUpdated(StateSO stateSo)
     {
-        pauseMenu.MenuPressed();
+        if(stateSo.CanMenu)
+            pauseMenu.MenuPressed();
     }
 
     private void OnDestroy()
     {
-        InputEvents.Pause -= OnPause;
+        GameStatesEvents.StateUpdated -= OnStateUpdated;
     }
 }

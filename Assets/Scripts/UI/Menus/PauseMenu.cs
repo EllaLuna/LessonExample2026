@@ -12,7 +12,6 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        gameObject.SetActive(false);
         continueButton.onClick.AddListener(OnContinueClicked);
         restartButton.onClick.AddListener(OnRestartClicked);
         backToMenuButton.onClick.AddListener(OnMenuClicked);
@@ -26,12 +25,14 @@ public class PauseMenu : MonoBehaviour
 
     private void OnRestartClicked()
     {
+        GameStatesEvents.ButtonPressed?.Invoke(GameStateButtonTransition.Restart);
         HideMenu();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void OnContinueClicked()
     {
+        GameStatesEvents.ButtonPressed?.Invoke(GameStateButtonTransition.Continue);
         HideMenu();
     }
 

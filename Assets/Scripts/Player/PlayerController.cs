@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 10;
     [SerializeField] float jumpForce = 8f;
     bool isGrounded = false;
+    bool canMove = true;
 
     private void Reset()
     {
@@ -19,6 +21,12 @@ public class PlayerController : MonoBehaviour
     {
         InputEvents.Move += OnMove;
         InputEvents.Jump += OnJump;
+        GameStatesEvents.StateUpdated += OnStateUpdated;
+    }
+
+    private void OnStateUpdated(StateSO stateData)
+    {
+        canMove = stateData.CanMove;
     }
 
     private void OnMove(Vector2 dir)
@@ -28,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump()
     {
-        if (isGrounded)
+        if (isGrounded && canMove)
         {
             rb2d.AddForceY(jumpForce, ForceMode2D.Impulse);
             animator.SetTrigger(nameof(AnimationParameters.Jump));
@@ -42,6 +50,11 @@ public class PlayerController : MonoBehaviour
 
     private void SetAnimations()
     {
+        if(!canMove)
+        {
+            animator.SetFloat(nameof(AnimationParameters.DirectionX), 0);
+            return;
+        }
         animator.SetFloat(nameof(AnimationParameters.DirectionX), direction.x);
         if (rb2d.linearVelocityY < 0)
             animator.SetTrigger(nameof(AnimationParameters.Land));
@@ -58,7 +71,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb2d.linearVelocityX = direction.x * speed;
+        if (canMove)
+            rb2d.linearVelocityX = direction.x * speed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

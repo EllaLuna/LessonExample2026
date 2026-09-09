@@ -18,6 +18,7 @@ public class MainMenuController : MonoBehaviour
     private void StartGame()
     {
         Debug.Log("Start game");
+        GameStatesEvents.ButtonPressed?.Invoke(GameStateButtonTransition.Start);
         SceneManager.LoadScene(firstLevelName);
     }
 
